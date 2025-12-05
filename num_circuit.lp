@@ -45,6 +45,8 @@ val(inp2(C),Y) :- type(C,plus), nab(C), val(inp1(C),X), val(out(C), Z), Z != 0, 
 val(out(C), 0) :- type(C, plus), nab(C), val(inp1(C), 0), val(inp2(C), 0).
 val(inp1(C), 0) :- type(C, plus), nab(C), val(inp2(C), Y), val(out(C), Y).
 val(inp2(C), 0) :- type(C, plus), nab(C), val(inp1(C), X), val(out(C), X).
+val(inp1(C), 0) :- type(C, plus), nab(C), val(out(C), 0).
+val(inp2(C), 0) :- type(C, plus), nab(C), val(out(C), 0).
 
 % propagation of values: 
 val(P2, V) :- conn(P1, P2), val(P1, V).
@@ -55,10 +57,10 @@ val(P1, V) :- conn(P1, P2), val(P2, V).
 :- val(P,_), #count{ V: val(P, V) } > 1.
 
 % diagnoses of fixed size (search for diagnoses of size 'n')
-% #const n = ...
 {ab(C) ; nab(C)} =1 :-comp(C).
+#minimize { 1,C: ab(C) }.
 % .
 % .
-nab(C):-comp(C).
+%nab(C):-comp(C).
 % display (can be changed for debugging purposes)
 #show ab/1.
