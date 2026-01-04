@@ -44,8 +44,6 @@ val(inp2(C),Y) :- type(C,plus), nab(C), val(inp1(C),X), val(out(C), Z), Z != 0, 
 val(out(C), 0) :- type(C, plus), nab(C), val(inp1(C), 0), val(inp2(C), 0).
 val(inp1(C), 0) :- type(C, plus), nab(C), val(inp2(C), Y), val(out(C), Y).
 val(inp2(C), 0) :- type(C, plus), nab(C), val(inp1(C), X), val(out(C), X).
-val(inp1(C), 0) :- type(C, plus), nab(C), val(out(C), 0).
-val(inp2(C), 0) :- type(C, plus), nab(C), val(out(C), 0).
 
 % propagation of values: 
 val(P2, V) :- conn(P1, P2), val(P1, V).
@@ -53,18 +51,19 @@ val(P1, V) :- conn(P1, P2), val(P2, V).
 
 % integrity constraint (we can't have two values on one part) 
 :- val(P,_), #count{ V: val(P, V) } > 1.
-
+%if a component is not abnormal, it must have all its values defined
+:- comp(C), not val(inp1(C), _).
+:- comp(C), not val(inp2(C), _).
+:- comp(C), not val(out(C), _).
 % diagnoses of fixed size (search for diagnoses of size 'n')
 {ab(C) ; nab(C)} = 1 :-comp(C).
 no_ab(N) :- N = #count{C: ab(C)}.
+:- not no_ab(n).
 %If you want to run Task 2 with fixed size diagnoses, uncomment the line below
 %:- no_ab(N), N!=n.
-%The lines below are meant for solving Task 3. C2 cannot be a valid diagnosis because it cannot satisfy both y1=6 and y2=0, this would create an inconsistent model. 
-%:- ab(c5).
-%:- ab(c2), ab(c4).
-%:- ab(c2),ab(c1).
-%Uncomment the line below to solve Task 2 and find cardinality minimal diagnoses
-#minimize { 1,C: ab(C) }.
+%The lins below are meant for solving Task 3. C2 cannot be a valid diagnosis because it cannot satisfy both y1=6 and y2=0, this would create an inconsistent model. 
+% Uncomment the line below to solve Task 2 and find cardinality minimal diagnoses
+%#minimize { 1,C: ab(C) }.
 %Uncomment the line bellow to consider all components as not abnormal in order to solve Task 1
 %nab(C):-comp(C).
 #show ab/1.

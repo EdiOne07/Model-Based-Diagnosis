@@ -4,4 +4,4 @@ val(x3,4).
 val(x4,0).
 val(y1,6).
 val(y2,0).
-#show val/2.
+%#show val/2.
